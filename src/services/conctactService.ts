@@ -7,7 +7,7 @@ export interface IContactForm {
   email: string;
   subject: string;
   message: string;
-  recaptchaToken: string;
+  recaptchaToken: string | null;
 }
 
 export interface IContactResponse {
@@ -25,24 +25,39 @@ export class contactService {
    * @param formData Datos del formulario
    * @returns Respuesta del servidor
    */
+ 
+
+
+
   public static async sendContactForm(formData: IContactForm): Promise<IContactResponse> {
     try {
-      const response = await api.post<IContactResponse>(this.ENDPOINT, formData);
+      // Asegúrate de que los datos estén en el formato correcto
+      const payload = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        subject: formData.subject.trim(),
+        message: formData.message.trim(),
+        recaptchaToken: formData.recaptchaToken
+      };
+  
+      console.log('Payload formateado:', payload);
+      
+      const response = await api.post<IContactResponse>(this.ENDPOINT, payload);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        // Manejo específico de errores de Axios
-        const message = error.response?.data?.message || 'Error al enviar el formulario';
+        console.error('Error response:', error.response?.data);
         return {
           success: false,
-          message
+          message: error.response?.data?.message || 'Error al enviar el formulario'
         };
       }
-      // Manejo de otros tipos de errores
       return {
         success: false,
         message: 'Error inesperado al enviar el formulario'
       };
     }
   }
+
+
 }

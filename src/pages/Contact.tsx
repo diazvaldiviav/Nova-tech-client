@@ -66,6 +66,16 @@ const Contact: FC = () => {
 
     setIsSubmitting(true);
     try {
+
+      console.log('Enviando datos:', {
+        name: data.name,
+        email: data.email,
+        subject: data.subject, // Asegúrate de que este campo existe
+        message: data.message,
+        recaptchaToken: captchaValue
+      });
+
+
       setLoading(true);
       setStatus("loading");
       const response = await contactService.sendContactForm({
