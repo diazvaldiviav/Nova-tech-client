@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import ReCAPTCHA from "react-google-recaptcha";
 import { contactService } from "../services/conctactService";
 import { useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import {
   ContactContainer,
   ContactWrapper,
@@ -23,6 +25,7 @@ interface FormData {
   email: string;
   subject: string;
   message: string;
+  recaptchaToken: string;
 }
 
 const Contact: FC = () => {
@@ -35,27 +38,56 @@ const Contact: FC = () => {
   const navigate = useNavigate();
   const recaptchaKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
+  const schema = yup.object().shape({
+    name: yup
+      .string()
+      .required("El nombre es requerido")
+      .min(2, "El nombre debe tener entre 2 y 50 caracteres")
+      .max(50, "El nombre debe tener entre 2 y 50 caracteres")
+      .matches(/^[a-zA-ZÀ-ÿ\s]*$/, "El nombre solo puede contener letras"),
+
+    email: yup
+      .string()
+      .required("El email es requerido")
+      .email("El formato del email no es válido")
+      .max(100, "El email no puede exceder 100 caracteres"),
+
+    subject: yup
+      .string()
+      .required("El asunto es requerido")
+      .min(5, "El asunto debe tener entre 5 y 100 caracteres")
+      .max(100, "El asunto debe tener entre 5 y 100 caracteres"),
+
+    message: yup
+      .string()
+      .required("El mensaje es requerido")
+      .min(20, "El mensaje debe tener entre 20 y 1000 caracteres")
+      .max(1000, "El mensaje debe tener entre 20 y 1000 caracteres"),
+
+    recaptchaToken: yup.string().required("El token de reCAPTCHA es requerido"),
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormData>();
+  } = useForm<FormData>({
+    resolver: yupResolver(schema),
+  });
 
   useEffect(() => {
-    console.log('Environment:', import.meta.env.MODE); 
-    console.log('ReCAPTCHA Key:', recaptchaKey); // Para debugging
+    console.log("Environment:", import.meta.env.MODE);
+    console.log("ReCAPTCHA Key:", recaptchaKey); // Para debugging
     if (recaptchaKey) {
       setLoading(false);
     }
   }, [recaptchaKey]);
 
   if (!recaptchaKey) {
-    console.error('ReCAPTCHA key is missing!');
+    console.error("ReCAPTCHA key is missing!");
     return <div>Error: ReCAPTCHA configuration missing</div>;
   }
-
-  
 
   const onSubmit = async (data: FormData) => {
     if (!captchaValue) {
@@ -66,15 +98,13 @@ const Contact: FC = () => {
 
     setIsSubmitting(true);
     try {
-
-      console.log('Enviando datos:', {
+      console.log("Enviando datos:", {
         name: data.name,
         email: data.email,
         subject: data.subject, // Asegúrate de que este campo existe
         message: data.message,
-        recaptchaToken: captchaValue
+        recaptchaToken: captchaValue,
       });
-
 
       setLoading(true);
       setStatus("loading");
@@ -129,6 +159,11 @@ const Contact: FC = () => {
       >
         <Title>Contáctanos</Title>
         <Form onSubmit={handleSubmit(onSubmit)}>
+          {errors.subject && (
+            <span className="text-red-500 text-sm">
+              {errors.subject.message}
+            </span>
+          )}
           <FormGroup>
             <Label>Nombre</Label>
             <Input
@@ -178,9 +213,9 @@ const Contact: FC = () => {
           </FormGroup>
 
           <ReCAPTCHA
-        sitekey={recaptchaKey}
-        onChange={(value: string | null) => setCaptchaValue(value)}
-      />
+            sitekey={recaptchaKey}
+            onChange={(value: string | null) => setCaptchaValue(value)}
+          />
 
           <SubmitButton
             type="submit"
