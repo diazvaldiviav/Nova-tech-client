@@ -72,8 +72,10 @@ const Contact: FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
+    mode: "onChange", // Valida en cambios
   });
 
   useEffect(() => {
@@ -115,11 +117,19 @@ const Contact: FC = () => {
 
       if (response.success) {
         setStatus("success");
+        console.log("Respuesta del servidor:", response);
         reset();
         setCaptchaValue(null);
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
       } else {
-        throw new Error(response.message);
+        console.log("Error:", response.message);
+        setIsSubmitting(false);
       }
+
+      console.log("Estado de envío:", isSubmitting);
+      console.log("Response:", response);
     } catch (error) {
       // Manejo tipado del error
       if (error instanceof Error) {
@@ -129,9 +139,16 @@ const Contact: FC = () => {
         setStatus("error");
         console.error("Error:", error);
       }
+      setIsSubmitting(false);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Actualizar el token de reCAPTCHA en el formulario
+  const handleCaptchaChange = (value: string | null) => {
+    setCaptchaValue(value);
+    setValue("recaptchaToken", value || "");
   };
 
   const handleCloseDialog = () => {
@@ -214,12 +231,12 @@ const Contact: FC = () => {
 
           <ReCAPTCHA
             sitekey={recaptchaKey}
-            onChange={(value: string | null) => setCaptchaValue(value)}
+            onChange={handleCaptchaChange} // Usar el nuevo handler
           />
 
           <SubmitButton
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !captchaValue}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
