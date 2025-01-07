@@ -1,0 +1,23 @@
+/* Añade esto a tu archivo index.css existente */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+.typewriter-text {
+  font-size: 1.5rem;
+  color: white;
+  margin: 2rem 0;
+  min-height: 60px;
+}
+
+/* Asegúrate de que el contenedor principal ocupe toda la altura */
+#root {
+  min-height: 100vh;
+}
+
+/* Estilos para el fondo de partículas */
+#particles-js {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #0a0a0a;
+}
