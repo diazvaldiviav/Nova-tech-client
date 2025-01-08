@@ -7,6 +7,7 @@ export const ServicesSection = styled.section`
 `;
 
 export const ServicesContainer = styled.div`
+ position: relative;
   max-width: 1200px;
   margin: 0 auto;
 `;
@@ -78,3 +79,6 @@ export const ServiceButton = styled.button`
     color: black;
   }
 `;
+
+
+
