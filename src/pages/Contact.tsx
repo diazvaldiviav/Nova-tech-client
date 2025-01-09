@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -29,6 +29,7 @@ interface FormData {
 }
 
 const Contact: FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -77,6 +78,12 @@ const Contact: FC = () => {
     resolver: yupResolver(schema),
     mode: "onChange", // Valida en cambios
   });
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
 
   useEffect(() => {
     console.log("Environment:", import.meta.env.MODE);
@@ -166,8 +173,10 @@ const Contact: FC = () => {
     }
   };
 
+
+
   return (
-    <ContactContainer>
+    <ContactContainer ref={containerRef}>
       <ContactWrapper
         as={motion.div}
         initial={{ opacity: 0, y: 20 }}
