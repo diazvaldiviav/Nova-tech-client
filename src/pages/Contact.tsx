@@ -19,6 +19,7 @@ import {
   SubmitButton,
 } from "../styles/Contact.styles";
 import FormLoadingAnimation from "../component/Tools/FormLoadingAnimation";
+import ContactBanner from "../component/layout/contactBanner";
 
 interface FormData {
   name: string;
@@ -258,6 +259,9 @@ const Contact: FC = () => {
         status={status}
         onClose={handleCloseDialog}
       />
+
+
+      <ContactBanner />
     </ContactContainer>
   );
 };

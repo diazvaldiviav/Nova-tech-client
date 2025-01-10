@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { motion } from 'framer-motion';
 import Typewriter from 'typewriter-effect';
 import {
@@ -7,12 +7,10 @@ import {
   Title,
   CTAButton,
 } from '../../styles/Banner.styles';
+import { useNavigate } from 'react-router-dom';
 
 const Banner: FC = () => {
-  useEffect(() => {
-    // Aquí inicializaremos particles.js
-    // Lo implementaremos en el siguiente paso
-  }, []);
+  const navigate = useNavigate();
 
   return (
     <BannerContainer>
@@ -51,7 +49,7 @@ const Banner: FC = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 1 }}
           >
-            <CTAButton>
+            <CTAButton onClick={() => navigate('/cotizacion')}>
               Solicita una cotización gratuita
             </CTAButton>
           </motion.div>

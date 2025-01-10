@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+
 import {
   NavbarContainer,
   NavContent,
@@ -14,6 +15,7 @@ import {
 } from '../../styles/Navbar.styles';
 
 const Navbar: FC = () => {
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
@@ -22,6 +24,7 @@ const Navbar: FC = () => {
     { title: 'Portafolio', path: '/portfolio' },
     { title: 'Sobre Nosotros', path: '/about' },
     { title: 'Blog', path: '/blog' },
+    { title: 'Precios', path: '/pricing' },
     { title: 'Contacto', path: '/contact' }
   ];
 
@@ -50,6 +53,7 @@ const Navbar: FC = () => {
           <CTAButton
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/cotizacion')}
           >
             Solicitar Cotización
           </CTAButton>

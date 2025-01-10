@@ -14,7 +14,7 @@ import {
   ServicesDescription 
 } from '../styles/Services.main.styles';
 
-const Services: FC = () => {
+const Prices: FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const Services: FC = () => {
         transition={{ duration: 0.6 }}
       >
         <ServicesTitle className="services-title">
-          Nuestros Servicios
+          Nuestros Precios
         </ServicesTitle>
         <ServicesDescription className="services-description">
           Soluciones tecnológicas innovadoras para impulsar tu negocio
@@ -66,4 +66,4 @@ const Services: FC = () => {
   );
 };
 
-export default Services;
+export default Prices;
