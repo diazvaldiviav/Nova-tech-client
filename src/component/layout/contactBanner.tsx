@@ -7,6 +7,8 @@ const BannerContainer = styled.div`
   padding: 4rem 2rem;
   display: flex;
   margin-top: 10rem;
+  margin-left: auto;
+  margin-right: auto;
   justify-content: center;
   max-width: 1400px;
   gap: 30rem;

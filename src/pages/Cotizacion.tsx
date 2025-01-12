@@ -1,8 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import styled from "styled-components";
 import robotImage from '../assets/Images/roobot-mirando-derecha.png';
-import { servicesDetails } from "../data/serviceDetails";
+import { Service, serviceServices } from "../services/serviceServices";
 import { quotationServices } from "../services/QuotationService";
 import {
   MenuItem,
@@ -11,192 +9,52 @@ import {
   Checkbox,
   Select as MUISelect,
 } from "@mui/material";
-
-// Styled Components
-const QuotationContainer = styled.div`
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 2rem;
-  background-color: #1a1a1a;
-`;
-
-const QuotationWrapper = styled.div`
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  gap: 2rem;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`;
-
-const InfoSection = styled.div`
-  flex: 1;
-  color: white;
-  padding: 2rem;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-const RobotImage = styled.img`
-  position: absolute;
-  right: -50px;
-  bottom: 50px;
-  width: 300px;
-  height: auto;
-  opacity: 0.9;
-  z-index: 1;
-  
-  @media (max-width: 1200px) {
-    width: 250px;
-    right: -30px;
-  }
-  
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const ContentWrapper = styled.div`
-  position: relative;
-  z-index: 2;
-`;
+import { 
+  QuotationContainer,
+   QuotationWrapper, 
+   InfoSection, ContentWrapper, 
+   Title, 
+   Subtitle, 
+   StyledList, 
+   RobotImage, 
+   FormSection, 
+   Form, 
+   FormGroup, 
+   Label, 
+   Input, 
+   Select, 
+   TextArea, 
+   SubmitButton, 
+   CheckboxGroup } from "../styles/cotizacion.styles";
 
 
-const FormSection = styled.div`
-  flex: 1;
-  padding: 2rem;
-`;
-
-const Title = styled.h2`
-  color: white;
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-`;
-
-const StyledList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin-top: 1rem;
-  
-  li {
-    margin: 0.8rem 0;
-    display: flex;
-    align-items: center;
-    
-    &:before {
-      content: "✓";
-      color: #00ff00;
-      margin-right: 10px;
-      font-weight: bold;
-    }
-  }
-`;
-
-const Subtitle = styled.h3`
-  color: #00ff00;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const Label = styled.label`
-  color: white;
-  font-size: 1rem;
-`;
-
-const Input = styled.input`
-  padding: 0.8rem;
-  border-radius: 4px;
-  border: 2px solid #fff;
-  background-color: #1a1a1a; // Cambiado de #222 a #1a1a1a
-  color: white;
-  width: 100%;
-  
-  &:focus {
-    outline: none;
-    border-color: #00ff00;
-  }
-  
-  &::placeholder {
-    color: #666;
-  }
-`;
-
-const Select = styled.select`
-  padding: 0.8rem;
-  border-radius: 4px;
-  border: 1px solid #fff;
-  background-color: #1a1a1a; // Cambiado de #222 a #1a1a1a
-  color: white;
-  width: 100%;
-  cursor: pointer;
-  
-  &:focus {
-    outline: none;
-    border-color: #00ff00;
-  }
-  
-  option {
-    background-color: #1a1a1a;
-    color: white;
-  }
-`;
-
-const TextArea = styled.textarea`
-  padding: 0.8rem;
-  border-radius: 4px;
-  border: 1px solid #fff;
-  background-color: #1a1a1a;
-  color: white;
-  min-height: 120px;
-
-  &:focus {
-    outline: none;
-    border-color: #00ff00;
-  }
-`;
-
-const SubmitButton = styled(motion.button)`
-  padding: 1rem;
-  background-color: #00ff00;
-  color: black;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 1rem;
-
-  &:disabled {
-    background-color: #666;
-    cursor: not-allowed;
-  }
-`;
 
 const QuotationForm: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const [services, setServices] = useState<Service[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
 
     useEffect(() => {
         if (containerRef.current) {
           containerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+       
+
+        const fetchServices = async () => {
+          try {
+            const data = await serviceServices.getServices();
+            console.log(data);
+            setServices(data);
+          } catch (err) {
+            setError(err instanceof Error ? err.message : 'Error fetching services');
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        fetchServices();
       }, []);
 
 
@@ -210,13 +68,7 @@ const QuotationForm: React.FC = () => {
     message: "",
   });
 
-  const CheckboxGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-`;
-
+  
 
 
 const handleSubmit = async (e: React.FormEvent) => {
@@ -232,6 +84,9 @@ const handleSubmit = async (e: React.FormEvent) => {
       // Here you can show an error message
     }
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   const handleChange = (e:any) => {
     const { name, value } = e.target;
@@ -373,7 +228,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <em>Selecciona un servicio</em>
                 </MenuItem>
 
-                {servicesDetails.map((service) => (
+                {services.map((service) => (
                   <MenuItem key={service.id} value={service.title}>
                     {service.title}
                   </MenuItem>
@@ -391,7 +246,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   required
                 >
                   <option value="">Selecciona un plan</option>
-                  {servicesDetails
+                  {services
                     .find((service) => service.title === formData.service)
                     ?.plans.map((plan) => (
                       <option key={plan.plan} value={plan.plan}>
@@ -406,7 +261,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               <FormControl component="fieldset" sx={{ mt: 2 }}>
                  <Label>Extras</Label>
                 <CheckboxGroup>
-                  {servicesDetails
+                  {services
                     .find((service) => service.title === formData.service)
                     ?.extras.map((extra) => (
                       <FormControlLabel
