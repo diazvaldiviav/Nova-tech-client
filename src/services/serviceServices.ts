@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://localhost:7280/api';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 interface ServicePlan {
   plan: string;
@@ -25,7 +26,12 @@ export interface Service {
   buttonText: string;
 }
 
+
+
+
+
 export const serviceServices = {
+
   // Get all services
   getServices: async (): Promise<Service[]> => {
     try {

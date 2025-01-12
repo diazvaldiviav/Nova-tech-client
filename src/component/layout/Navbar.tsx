@@ -25,7 +25,7 @@ const Navbar: FC = () => {
     { title: 'Sobre Nosotros', path: '/about' },
     { title: 'Blog', path: '/blog' },
     { title: 'Precios', path: '/pricing' },
-    { title: 'Contacto', path: '/contact' }
+    { title: 'Contacto', path: '/contact' },
   ];
 
   return (

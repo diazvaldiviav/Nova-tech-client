@@ -3,6 +3,7 @@ import Navbar from './component/layout/Navbar';
 import Footer from './component/layout/Footer';
 import AppRoutes from './routes/AppRoutes';
 
+
 function App() {
   return (
     <Router>
